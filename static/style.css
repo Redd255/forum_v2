@@ -282,7 +282,7 @@ main {
 }
 
 .categorie {
-  background-color: #ff9900;
+  background-color: #0051ff;
   color: black;
   padding: 3px 6px;
   border-radius: 4px;
@@ -491,7 +491,7 @@ main {
 
 .Logo .Name span {
   color: black;
-  background-color: #ff9900;
+  background-color: #0051ff;
   margin-right: 5px;
   padding: 2px 8px;
   border-radius: 4px;
@@ -605,7 +605,7 @@ main {
   justify-content: center;
   align-items: center;
   height: fit-content;
-  background-color: #ff9900;
+  background-color: #00a2ff;
   color: black;
   gap: 7px;
   padding: 10px;
@@ -705,7 +705,7 @@ button span {
 .categorie {
   color: rgb(0, 0, 0);
   width: 70px;
-  background-color: #ff9900;
+  background-color: #0084ff;
   border-radius: 4px;
   height: fit-content;
   text-align: center;
@@ -862,7 +862,7 @@ label {
 }
 
 .topic-options label:hover {
-  border-color: #ff8000;
+  border-color: #0044ff;
 }
 
 .topic-options input[type="radio"] {
@@ -891,7 +891,7 @@ label {
 
 .model button {
   width: 100%;
-  background: #ff8000;
+  background: #0051ff;
   color: #1a1a1a;
   border: none;
   padding: 15px;

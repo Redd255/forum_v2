@@ -4,21 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
-	"text/template"
 	"time"
-
-	"golang.org/x/crypto/bcrypt"
 )
-
-var Logout = true
-var db *sql.DB
-
-func InitHandlers(database *sql.DB) {
-	db = database
-}
 
 func Createdposthandler(w http.ResponseWriter, r *http.Request) {
 	c, err := r.Cookie("session_token")
@@ -51,7 +40,7 @@ func Createdposthandler(w http.ResponseWriter, r *http.Request) {
 		Posts:    createdpost,
 		Logout:   Logout,
 	}
-	Rendertemplate(w, "filter1", Data)
+	tmpl.ExecuteTemplate(w, "filter1.html", Data)
 
 }
 
@@ -93,7 +82,7 @@ func Likedposthandler(w http.ResponseWriter, r *http.Request) {
 		Logout:   Logout,
 	}
 
-	Rendertemplate(w, "filter1", Data)
+	tmpl.ExecuteTemplate(w, "filter1.html", Data)
 }
 
 func Filterhandler(w http.ResponseWriter, r *http.Request) {
@@ -128,7 +117,7 @@ func Filterhandler(w http.ResponseWriter, r *http.Request) {
 		Posts:    topicPosts,
 		Logout:   Logout,
 	}
-	Rendertemplate(w, "filter1", Data)
+	tmpl.ExecuteTemplate(w, "filter1.html", Data)
 }
 
 var userComment string
@@ -288,16 +277,11 @@ func Commentairehandler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(userComment)
 
-	Rendertemplate(w, "commentaire", data)
+	tmpl.ExecuteTemplate(w, "commentaire.html", data)
 }
 
 func Likehandler(w http.ResponseWriter, r *http.Request) {
-	type Response struct {
-		PostID  int  `json:"postId"`
-		Like    int  `json:"like"`
-		Dislike int  `json:"dislike"`
-		Error   bool `json:"error"`
-	}
+
 	response := Response{}
 	if r.Method == http.MethodPost {
 		request := Rreaction{}
@@ -426,7 +410,7 @@ func Postshandler(w http.ResponseWriter, r *http.Request) {
 		posts = append(posts, newPost)
 	}
 
-	Rendertemplate(w, "index", posts)
+	tmpl.ExecuteTemplate(w, "index.html", posts)
 
 }
 
@@ -441,116 +425,4 @@ func Logouthandler(w http.ResponseWriter, r *http.Request) {
 		MaxAge: -1,
 	})
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
-}
-
-func Hashpassword(password string) (string, error) {
-	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return string(hashed), err
-
-}
-func Checkpassword(hashed string, password string) bool {
-	return bcrypt.CompareHashAndPassword([]byte(hashed), []byte(password)) == nil
-}
-
-func Rendertemplate(w http.ResponseWriter, temp string, data interface{}) {
-	tempath := fmt.Sprintf("templates/%s.html", temp)
-	t, err := template.ParseFiles(tempath)
-	if err != nil {
-		http.Error(w, "Erreur lors du rendu du template", http.StatusInternalServerError)
-		return
-	}
-	t.Execute(w, data)
-
-}
-
-func Homehandelr(w http.ResponseWriter, r *http.Request) {
-	var Username string
-	a, err := r.Cookie("session_token")
-	if err == nil {
-		Logout = false
-		uuid := a.Value
-		rows := db.QueryRow("SELECT username FROM  sessions WHERE token =? ", uuid)
-		err := rows.Scan(&Username)
-		if err == sql.ErrNoRows {
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
-		}
-	} else {
-		Logout = true
-	}
-	rows, err := db.Query("SELECT id ,username,content,topic,like,dislike,commentcount,create_at FROM posts")
-	if err != nil {
-		panic(err)
-	}
-	var posts = []post{}
-	for rows.Next() {
-		var newPost post
-		var Ctime time.Time
-		rows.Scan(&newPost.Id, &newPost.Username, &newPost.Content, &newPost.Topic, &newPost.Like, &newPost.Dislike, &newPost.Commentcount, &Ctime)
-		newPost.Creation = convertime(time.Now().Unix() - Ctime.Unix())
-		posts = append(posts, newPost)
-	}
-
-	Data := data{
-		Username: Username,
-		Posts:    posts,
-		Logout:   Logout,
-	}
-	Rendertemplate(w, "index", Data)
-
-}
-func Loginhandler(w http.ResponseWriter, r *http.Request) {
-	Rendertemplate(w, "login", nil)
-}
-func Signup(w http.ResponseWriter, r *http.Request) {
-	Rendertemplate(w, "signup", nil)
-}
-func Signuphandler(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	username := r.Form.Get("username")
-	email := r.Form.Get("email")
-	password := r.Form.Get("password")
-	hashed, _ := Hashpassword(password)
-	statement, _ := db.Prepare("INSERT INTO users (username,password,email) VALUES(?,?,?)")
-	statement.Exec(username, hashed, email)
-	http.Redirect(w, r, "/login", http.StatusSeeOther)
-}
-
-func Connexionhandler(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	Username := r.FormValue("username")
-	Password := r.FormValue("password")
-	rows := db.QueryRow("SELECT password FROM users WHERE username = ?", Username)
-	var password string
-	err := rows.Scan(&password)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			Rendertemplate(w, "login", "invalid Credentials")
-		} else {
-			http.Error(w, "Erreur lors de la recherche de l'utilisateur", http.StatusInternalServerError)
-		}
-		return
-	}
-	if Checkpassword(password, Password) {
-		uuid, _ := GenerateUUID()
-		cookie := http.Cookie{
-			Name:     "session_token",
-			Value:    uuid,
-			HttpOnly: true,
-			Secure:   true,
-		}
-		http.SetCookie(w, &cookie)
-
-		statement, err := db.Prepare("INSERT INTO sessions (token,username) VALUES (?,?)")
-		if err != nil {
-			log.Println("Erreur lors de la préparation de la requête :", err)
-			http.Error(w, "Erreur interne du serveur", http.StatusInternalServerError)
-			return
-		}
-		statement.Exec(uuid, Username)
-		defer statement.Close()
-		http.Redirect(w, r, "/home", http.StatusSeeOther)
-	} else {
-		Rendertemplate(w, "login", "invalid Credentials")
-	}
-
 }

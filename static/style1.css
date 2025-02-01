@@ -1,13 +1,31 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap");
+
+:root {
+    --bg-color: #000;
+    --logo-text-color: white;
+    --logo-highlight-color: #0084ff;
+    --form-bg-color: rgba(0, 0, 0, 0.75);
+    --heading-color: #fff;
+    --input-bg-color: #333;
+    --input-focus-color: #444;
+    --input-label-color: #8c8c8c;
+    --button-bg-color: #008cff;
+    --button-hover-color: #036cce;
+    --link-color: #00c3ff;
+    --text-secondary-color: #b3b3b3;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
+
 body {
-    background: #000;
+    background: var(--bg-color);
 }
+
 body::before {
     content: "";
     position: absolute;
@@ -22,7 +40,7 @@ body::before {
 .Logo {
     margin-left: 20px;
     font-size: 25px;
-    color: white;
+    color: var(--logo-text-color);
     font-weight: 900;
     line-height: 20px;
     border-radius: 20px;
@@ -31,15 +49,16 @@ body::before {
     display: flex;
     align-items: center;
     margin-right: 5px;
-  }
-  
+}
+
 .Logo .Name span {
     color: black;
-    background-color: #ff9900;
+    background-color: var(--logo-highlight-color);
     margin-right: 5px;
     padding: 2px 8px;
     border-radius: 4px;
-  }
+}
+
 .form-wrapper {
     position: absolute;
     left: 50%;
@@ -48,35 +67,41 @@ body::before {
     padding: 70px;
     width: 450px;
     transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, .75);
+    background: var(--form-bg-color);
 }
+
 .form-wrapper h2 {
-    color: #fff;
+    color: var(--heading-color);
     font-size: 2rem;
 }
+
 .form-wrapper form {
     margin: 25px 0 65px;
 }
+
 form .form-control {
     height: 50px;
     position: relative;
     margin-bottom: 16px;
 }
+
 .form-control input {
     height: 100%;
     width: 100%;
-    background: #333;
+    background: var(--input-bg-color);
     border: none;
     outline: none;
     border-radius: 4px;
-    color: #fff;
+    color: var(--heading-color);
     font-size: 1rem;
     padding: 0 20px;
 }
+
 .form-control input:is(:focus, :valid) {
-    background: #444;
+    background: var(--input-focus-color);
     padding: 16px 20px 0;
 }
+
 .form-control label {
     position: absolute;
     left: 20px;
@@ -84,19 +109,21 @@ form .form-control {
     transform: translateY(-50%);
     font-size: 1rem;
     pointer-events: none;
-    color: #8c8c8c;
+    color: var(--input-label-color);
     transition: all 0.1s ease;
 }
+
 .form-control input:is(:focus, :valid)~label {
     font-size: 0.75rem;
     transform: translateY(-130%);
 }
+
 form button {
     width: 100%;
     padding: 16px 0;
     font-size: 1rem;
-    background: #ff9900;
-    color: #fff;
+    background: var(--button-bg-color);
+    color: var(--heading-color);
     font-weight: 500;
     border-radius: 4px;
     border: none;
@@ -105,37 +132,47 @@ form button {
     cursor: pointer;
     transition: 0.1s ease;
 }
+
 form button:hover {
-    background: #ce8703;
+    background: var(--button-hover-color);
 }
+
 .form-wrapper a {
     text-decoration: none;
 }
+
 .form-wrapper a:hover {
     text-decoration: underline;
 }
+
 .form-wrapper :where(label, p, small, a) {
-    color: #b3b3b3;
+    color: var(--text-secondary-color);
 }
+
 form .form-help {
     display: flex;
     justify-content: space-between;
 }
+
 form .remember-me {
     display: flex;
 }
+
 form .remember-me input {
     margin-right: 5px;
-    accent-color: #b3b3b3;
+    accent-color: var(--text-secondary-color);
 }
+
 form .form-help :where(label, a) {
     font-size: 0.9rem;
 }
+
 .form-wrapper p a {
-    color: #ff9900;
+    color: var(--link-color);
 }
+
 .form-wrapper small {
     display: block;
     margin-top: 15px;
-    color: #b3b3b3;
+    color: var(--text-secondary-color);
 }

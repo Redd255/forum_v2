@@ -27,7 +27,7 @@ func init() {
 	if err != nil {
 		log.Fatal("Error reading SQL file:", err)
 	}
-		_, err = db.Exec(string(sqlStatements))
+	_, err = db.Exec(string(sqlStatements))
 	if err != nil {
 		log.Fatal("Error executing SQL statements:", err)
 	}
@@ -37,15 +37,14 @@ func init() {
 func main() {
 	defer db.Close()
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	
+
 	http.HandleFunc("/", server.Homehandelr)
+	http.HandleFunc("/signup", server.Signup)
+	http.HandleFunc("/login", server.Login)
+	
 	http.HandleFunc("/createdpost", server.Createdposthandler)
 	http.HandleFunc("/likedpost", server.Likedposthandler)
 	http.HandleFunc("/filter", server.Filterhandler)
-	http.HandleFunc("/signup", server.Signup)
-	http.HandleFunc("/inscription", server.Signuphandler)
-	http.HandleFunc("/login", server.Loginhandler)
-	http.HandleFunc("/connexion", server.Connexionhandler)
 	http.HandleFunc("/logout", server.Logouthandler)
 	http.HandleFunc("/posts", server.Postshandler)
 	http.HandleFunc("/react", server.Likehandler)

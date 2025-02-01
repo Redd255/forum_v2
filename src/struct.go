@@ -1,5 +1,24 @@
 package server
 
+import (
+	"database/sql"
+	"text/template"
+)
+
+var Logout = true
+var db *sql.DB
+
+func InitHandlers(database *sql.DB) {
+	db = database
+}
+
+var tmpl = template.Must(template.ParseFiles(
+	"templates/index.html",
+	"templates/login.html",
+	"templates/filter1.html",
+	"templates/signup.html",
+	"templates/commentaire.html"))
+
 type comment struct {
 	Id       int
 	Username string
@@ -7,17 +26,17 @@ type comment struct {
 	Creation string
 	Like     int
 	Dislike  int
-	PostId int
+	PostId   int
 }
 
 type post struct {
-	Id       int
-	Username string
-	Content  string
-	Creation string
-	Topic    string
-	Like     int
-	Dislike  int
+	Id           int
+	Username     string
+	Content      string
+	Creation     string
+	Topic        string
+	Like         int
+	Dislike      int
 	Commentcount int
 }
 
@@ -43,4 +62,10 @@ type Rreaction struct {
 type Creation struct {
 	CommentId string `json:"commentId"`
 	Rreaction string `json:"reaction"`
+}
+type Response struct {
+	PostID  int  `json:"postId"`
+	Like    int  `json:"like"`
+	Dislike int  `json:"dislike"`
+	Error   bool `json:"error"`
 }

@@ -11,7 +11,10 @@
         <div class="Logo">
         <span class="Name">Talent <span>hub</span></span>
     </div>
-        <form action="/connexion" method="post">
+        <form action="/login" method="post">
+            {{ if .ErrorMessage }}
+            <div class="error-message" style="padding: 20px ;color: tomato;">{{ .ErrorMessage }}</div>
+            {{ end }}
             <div class="form-control">
                 <input type="text" name="username" required>
                 <label>Username</label>
