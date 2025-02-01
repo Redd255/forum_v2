@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="../static/style.css">
+    <title>TalentHub</title>
+</head>
+
+<body>
+    <nav>
+        <a href="/home" class="Logo">
+            <span class="Name">Talent <span>hub</span></span>
+        </a>
+        <div class="search-box">
+            <input type="text" id="srch" placeholder="Search...">
+            <div id="search-results"></div>
+            <button type="submit"><span class="material-symbols-outlined">search</span></button>
+        </div>
+        <div class="RightHeaderSection">
+            <div class="main-account">
+                </div>
+            </div>
+            {{if .Logout}}
+            <div class="log">
+            <div class="SignOptions"> 
+                    <a href="/login" class="Buttons">
+                        <i class="material-symbols-outlined">login</i>
+                        <span>Login / Register</span>
+                    </a>
+                </div> 
+                {{else}}
+            <img class="sBtn-text" src="profile.png" alt="Profile">
+            <ul class="menu-options" style="display: none; color: white;font-size: 18px; text-decoration: none;">
+                <li class="menu-item">
+                    <span class="material-symbols-outlined">person</span>
+                   {{.Username}}
+                </li>
+                <li class="menu-item logout-option">
+                    <span class="material-symbols-outlined">logout</span>
+                    <a href="/logout">Logout</a>
+                </li>
+            </ul>
+            {{end}}
+    </nav>
+    <script>
+        const selectMenu = document.querySelector('.sBtn-text');
+        const menuOptions = document.querySelector('.menu-options');
+        const logoutOption = document.querySelector('.logout-option');
+        selectMenu.addEventListener('click', () => {
+            menuOptions.style.display = menuOptions.style.display === 'none' ? 'block' : 'none';
+        });
+
+    </script>
+        <header>
+            <div class="nav-links">
+                <a href="/home">
+                    <i class="material-icons-outlined">home</i>
+                    <span>Home</span>
+                </a>
+                <a href="/filter?category=Music">
+                    <i class="material-icons-outlined">music_note</i>
+                    <span>Music</span>
+                </a>
+                <a href="/filter?category=Sport">
+                    <i class="material-icons-outlined">sports_soccer</i>
+                    <span>Sport</span>
+                </a>
+                <a href="/filter?category=Gaming">
+                    <i class="material-symbols-outlined">
+                        stadia_controller
+                    </i>
+                    <span>Gaming</span>
+                </a>
+                <a href="/filter?category=Health">
+                    <i class="material-symbols-outlined">
+                        health_and_safety
+                    </i>
+                    <span>Health</span>
+                </a>
+                <a href="/filter?category=General">
+                    <i class="material-symbols-outlined">
+                        globe_uk
+                    </i>
+                    <span>General</span>
+                </a>
+                <a href="">
+                    <i class="material-icons-outlined">person</i>
+                    <span>Profile</span>
+                </a>
+                <button class="tweet-button" id="btn">Post</button>
+            </div>
+    </header>
+    <main>
+        <div class="main-flex">
+            <div class="main-feed">
+                <div class="new-tweet">
+                    <img src="profile.png" alt="" class="tweet-img">
+                    <div class="new-tweet-details">
+                        <input type="text" placeholder="What's happening?">
+                    </div>
+                </div>
+                <div id="postModal" class="modal">
+                    <div class="modal-content">
+                        <form method="post" action="/posts">
+                            <input required type="text" class="title">
+
+                            <div class="text-area" placeholder="Title...">
+                                <textarea placeholder="What's on your mind?" name="content" rows="4"
+                                    required></textarea>
+                            </div>
+
+
+                            <div class="topic-options">
+                                <input type="radio" id="music" name="topic" value="Music" required>
+                                <label for="music">Music</label>
+
+                                <input type="radio" id="sport" name="topic" value="Sport">
+                                <label for="sport">Sport</label>
+
+                                <input type="radio" id="gaming" name="topic" value="Gaming">
+                                <label for="gaming">Gaming</label>
+
+                                <input type="radio" id="health" name="topic" value="Health">
+                                <label for="health">Health</label>
+
+                                <input type="radio" id="general" name="topic" value="General">
+                                <label for="general">General</label>
+                            </div>
+                            <div>
+                                <button class="choosed" type="submit">Publish</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <script>
+                    const modal = document.getElementById('postModal');
+                    const input = document.querySelector('.new-tweet-details input');
+                    const btn = document.getElementById('btn')
+                    const span = document.querySelector('.close');
+                    input.onclick = () => {
+                        modal.style.display = "flex";
+                    };
+                    btn.onclick = () => {
+                        modal.style.display = "flex"
+                    }
+                    window.onclick = (event) => {
+                        if (event.target == modal) modal.style.display = "none";
+                    };
+                </script>
+                {{range .Posts}}
+                <div class="feed-tweet">
+                    <img src="profile.png" alt="" class="tweet-img">
+                    <div class="feed-tweet-detail">
+                        <div class="tweet-details">
+                            <div class="tweet-user-info">
+                                <a href="" class="tweeter-name">{{.Username}}
+                                    <span class="tweeter-handle">@{{.Username}} .{{.Creation}}</span>
+                                </a>
+                            </div>
+                            <div class="tweet-actions">
+                                <i class="material-icons-outlined" id="horiz">more_horiz</i>
+                            </div>
+                        </div>
+                        <div class="tweet-text">
+                            <p>{{.Content}}</p>
+                        </div>
+                        <div class="tweet-icons">
+                            <div class="reaction">
+                                <form method="POST" action="/react" class="form">
+                                    <input type="hidden" name="postId" value={{.Id}}>
+                                    <div class="reaction-buttons">
+                                        <button class="btns" type="submit" name="reaction" value="1">
+                                            <i class="material-icons-outlined">thumb_up</i>
+                                            <span id="like-{{.Id}}">{{.Like}}</span>
+                                        </button>
+                                        <button class="btns" type="submit" name="reaction" value="-1">
+                                            <i class="material-icons-outlined">thumb_down</i>
+                                            <span id="dislike-{{.Id}}">{{.Dislike}}</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <a href="/commentaires?postId={{.Id}}">
+                            <div class="comments">
+                                <i class="material-icons-outlined">chat_bubble</i>
+                                <p>{{.Commentcount}}</p>
+                            </div>
+                        </a>
+                            <div class="categorie">#{{.Topic}}</div>
+                        </div>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+            <script>
+                const formElements = document.querySelectorAll('.form');
+                let clickedButtonValue;
+
+                // Ajouter l'événement de clic sur tous les formulaires
+                formElements.forEach(FormEl => {
+                    FormEl.addEventListener('click', event => {
+                        if (event.target.closest('button[type="submit"]')) {
+                           clickedButtonValue = event.target.closest('button[type="submit"]').value;
+                            console.log(clickedButtonValue)
+                        }
+                    });
+
+                    // Ajouter l'événement de soumission pour chaque formulaire
+                    FormEl.addEventListener('submit', event => {
+                        event.preventDefault()
+
+                        const data = {
+                            postId: FormEl.querySelector('[name="postId"]').value,
+                            reaction: clickedButtonValue
+                        }
+
+                        // Envoi des données en JSON au serveur
+                        fetch('http://localhost:9090/react', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify(data)
+                        })
+                        .then(res => res.json())  // Récupérer la réponse en JSON
+                            .then(data => {
+                                if (data.error) {
+                                    window.location.href = "/login"
+                                    return
+                                } 
+                                const likeElement = document.getElementById(`like-${data.postId}`)
+                                likeElement.textContent = data.like
+
+                                const dislikeElement = document.getElementById(`dislike-${data.postId}`);
+                                dislikeElement.textContent = data.dislike
+                            })
+                            .catch(err => console.log(err));  // Gérer les erreurs
+                    });
+                })
+            </script>
+
+
+            <div class="follow">
+                <h1 class="h1-title">My Activity</h1>
+                <div id="follow-hov-ii" class="follow-profile">
+                    <div class="follow-cont">
+                        <a href="/likedpost">
+                            <i id="follow-hov-i" class="material-symbols-outlined">
+                                favorite
+                            </i>
+                            <span>Liked post</span>
+                        </a>
+
+                    </div>
+                </div>
+                <div id="follow-hov" class="follow-profile">
+                    <div class="follow-cont">
+                        <a href="/createdpost">
+                            <i id="follow-hov-i" class="material-symbols-outlined">
+                                post
+                            </i>
+                            <span>My Posts</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+
+</html>
