@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"slices"
 	"strconv"
 	"time"
 )
@@ -30,11 +31,14 @@ func Createdposthandler(w http.ResponseWriter, r *http.Request) {
 		var Ctime time.Time
 		err = nrow.Scan(&post.Id, &post.Username, &post.Content, &post.Topic, &post.Like, &post.Dislike, &post.Commentcount, &Ctime)
 		post.Creation = convertime(time.Now().Unix() - Ctime.Unix())
+		r := db.QueryRow("SELECT score FROM post_reaction WHERE post_id = ? AND username = ?", post.Id, username)
+		r.Scan(&post.Score)
 		if err != nil {
 		}
 		createdpost = append(createdpost, post)
 	}
 
+	slices.Reverse(createdpost)
 	Data := data{
 		Username: username,
 		Posts:    createdpost,
@@ -72,10 +76,13 @@ func Likedposthandler(w http.ResponseWriter, r *http.Request) {
 		nrow := db.QueryRow("SELECT id ,username,content,topic,like,dislike,commentcount,create_at FROM posts WHERE id =?", id)
 		err = nrow.Scan(&post.Id, &post.Username, &post.Content, &post.Topic, &post.Like, &post.Dislike, &post.Commentcount, &Ctime)
 		post.Creation = convertime(time.Now().Unix() - Ctime.Unix())
+		r := db.QueryRow("SELECT score FROM post_reaction WHERE post_id = ? AND username = ?", post.Id, username)
+		r.Scan(&post.Score)
 		if err != nil {
 		}
 		likedpost = append(likedpost, post)
 	}
+	slices.Reverse(likedpost)
 	Data := data{
 		Username: username,
 		Posts:    likedpost,
@@ -109,9 +116,11 @@ func Filterhandler(w http.ResponseWriter, r *http.Request) {
 		var Ctime time.Time
 		rows.Scan(&post.Id, &post.Username, &post.Content, &post.Topic, &post.Like, &post.Dislike, &post.Commentcount, &Ctime)
 		post.Creation = convertime(time.Now().Unix() - Ctime.Unix())
+		r := db.QueryRow("SELECT score FROM post_reaction WHERE post_id = ? AND username = ?", post.Id, user)
+		r.Scan(&post.Score)
 		topicPosts = append(topicPosts, post)
 	}
-
+	slices.Reverse(topicPosts)
 	Data := data{
 		Username: user,
 		Posts:    topicPosts,
@@ -153,7 +162,6 @@ func Commentairehandler(w http.ResponseWriter, r *http.Request) {
 			json.NewDecoder(r.Body).Decode(&commentR)
 			if commentId, err := strconv.Atoi(commentR.CommentId); err == nil {
 				comment_react, _ := strconv.Atoi(commentR.Rreaction)
-				fmt.Println(commentId, comment_react)
 				row := db.QueryRow("SELECT score FROM comment_reaction WHERE username =? AND comment_id = ?", userComment, commentId)
 				var score int
 				err = row.Scan(&score)
@@ -209,6 +217,7 @@ func Commentairehandler(w http.ResponseWriter, r *http.Request) {
 					}
 				}
 				row = db.QueryRow("SELECT `like` ,`dislike` FROM comments WHERE id = ? AND username= ?", commentId, userComment)
+				r := db.QueryRow("SELECT score FROM comment_reaction WHERE comment_id = ? AND username = ?", commentId, userComment)
 				type res struct {
 					Like    int
 					Dislike int
@@ -217,12 +226,9 @@ func Commentairehandler(w http.ResponseWriter, r *http.Request) {
 				err = row.Scan(&Res.Like, &Res.Dislike)
 				if err != nil {
 				}
-				type Response struct {
-					CommentId int `json:"commentId"`
-					Like      int `json:"like"`
-					Dislike   int `json:"dislike"`
-				}
+
 				response := Response{CommentId: commentId, Like: Res.Like, Dislike: Res.Dislike}
+				r.Scan(&response.Score)
 				json.NewEncoder(w).Encode(response)
 				return
 			}
@@ -254,7 +260,8 @@ func Commentairehandler(w http.ResponseWriter, r *http.Request) {
 		var Ctime time.Time
 		err := rows.Scan(&newcomment.Id, &newcomment.Content, &newcomment.Username, &newcomment.Like, &newcomment.Dislike, &Ctime)
 		newcomment.Creation = convertime(time.Now().Unix() - Ctime.Unix())
-		fmt.Println(newcomment.Creation)
+		r := db.QueryRow("SELECT score FROM comment_reaction WHERE comment_id = ? AND username = ?", newcomment.Id, userComment)
+		r.Scan(&newcomment.Score)
 		if err == nil {
 			newcomment.PostId = Id
 			comments = append(comments, newcomment)
@@ -266,8 +273,12 @@ func Commentairehandler(w http.ResponseWriter, r *http.Request) {
 	var Ctime time.Time
 	err = row.Scan(&Post.Id, &Post.Username, &Post.Topic, &Post.Content, &Ctime, &Post.Like, &Post.Dislike, &Post.Commentcount)
 	Post.Creation = convertime(time.Now().Unix() - Ctime.Unix())
+	color := db.QueryRow("SELECT score FROM post_reaction WHERE username = ? AND post_id = ?", userComment, Id)
+	color.Scan(&Post.Score)
+
 	if err == nil {
 	}
+	slices.Reverse(comments)
 	data := Data{
 		Username: userComment,
 		PostId:   Id,
@@ -275,13 +286,19 @@ func Commentairehandler(w http.ResponseWriter, r *http.Request) {
 		Post:     Post,
 		Logout:   Logout,
 	}
-	fmt.Println(userComment)
 
 	tmpl.ExecuteTemplate(w, "commentaire.html", data)
 }
 
 func Likehandler(w http.ResponseWriter, r *http.Request) {
 
+	type Response struct {
+		PostID  int  `json:"postId"`
+		Like    int  `json:"like"`
+		Dislike int  `json:"dislike"`
+		Error   bool `json:"error"`
+		Score   int  `json:"score"`
+	}
 	response := Response{}
 	if r.Method == http.MethodPost {
 		request := Rreaction{}
@@ -368,6 +385,8 @@ func Likehandler(w http.ResponseWriter, r *http.Request) {
 		}
 		row = db.QueryRow("SELECT like, dislike FROM posts WHERE id = ?", post_index)
 		row.Scan(&response.Like, &response.Dislike)
+		color := db.QueryRow("SELECT score FROM post_reaction WHERE username = ? AND post_id = ?", user, post_index)
+		color.Scan(&response.Score)
 		json.NewEncoder(w).Encode(&response)
 
 	}
@@ -406,9 +425,11 @@ func Postshandler(w http.ResponseWriter, r *http.Request) {
 		var Ctime time.Time
 		rows.Scan(&newPost.Id, &newPost.Username, &newPost.Content, &newPost.Topic, &newPost.Like, &newPost.Dislike, &newPost.Commentcount, &Ctime)
 		newPost.Creation = convertime(time.Now().Unix() - Ctime.Unix())
-		fmt.Println(newPost.Creation)
+		r := db.QueryRow("SELECT score FROM post_reaction WHERE post_id = ? AND username = ?", newPost.Id, Username)
+		r.Scan(&newPost.Score)
 		posts = append(posts, newPost)
 	}
+	slices.Reverse(posts)
 
 	tmpl.ExecuteTemplate(w, "index.html", posts)
 

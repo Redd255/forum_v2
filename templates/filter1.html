@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="/static/style.css">
     <title>TalentHub</title>
 </head>
 
@@ -176,11 +176,11 @@
                                     <input type="hidden" name="postId" value={{.Id}}>
                                     <div class="reaction-buttons">
                                         <button class="btns" type="submit" name="reaction" value="1">
-                                            <i class="material-icons-outlined">thumb_up</i>
+                                            <i class="material-icons-outlined {{ if eq .Score 1}}active{{end}}" id="like{{.Id}}">thumb_up</i>
                                             <span id="like-{{.Id}}">{{.Like}}</span>
                                         </button>
                                         <button class="btns" type="submit" name="reaction" value="-1">
-                                            <i class="material-icons-outlined">thumb_down</i>
+                                            <i class="material-icons-outlined {{if eq .Score -1}}active{{end}}" id="dislike{{.Id}}">thumb_down</i>
                                             <span id="dislike-{{.Id}}">{{.Dislike}}</span>
                                         </button>
                                     </div>
@@ -238,6 +238,19 @@
 
                                 const dislikeElement = document.getElementById(`dislike-${data.postId}`);
                                 dislikeElement.textContent = data.dislike
+                                const likecolor = document.getElementById(`like${data.postId}`);
+                                const dislikecolor = document.getElementById(`dislike${data.postId}`);
+                                    if (data.score == 1) {
+                                        likecolor.classList.add('active'); 
+                                        dislikecolor.classList.remove('active');
+                                        
+                                    }else  if (data.score == -1 ) {
+                                        likecolor.classList.remove('active'); 
+                                        dislikecolor.classList.add('active');
+                                    } else {
+                                        likecolor.classList.remove('active'); 
+                                        dislikecolor.classList.remove('active');
+                                    }
                             })
                             .catch(err => console.log(err));  // Gérer les erreurs
                     });

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="/static/style.css">
     <title>Talent Hub</title>
 </head>
 
@@ -34,7 +34,7 @@
                 </a>
             </div>
             {{else}}
-            <img class="sBtn-text" src="../static/profile.png" alt="Profile">
+            <img class="sBtn-text" src="profile.png" alt="Profile">
             <ul class="menu-options" style="display: none; color: white;font-size: 18px; text-decoration: none;">
                 <li class="menu-item">
                     <span class="material-symbols-outlined">person</span>
@@ -47,24 +47,56 @@
             </ul>
             {{end}}
     </nav>
+    <script>
+        const selectMenu = document.querySelector('.sBtn-text');
+        const menuOptions = document.querySelector('.menu-options');
+        const logoutOption = document.querySelector('.logout-option');
+        selectMenu.addEventListener('click', () => {
+            menuOptions.style.display = menuOptions.style.display === 'none' ? 'block' : 'none';
+        });
 
+    </script>
 
     <header>
         <div class="nav-links">
-            <a href="/home"><i class="material-icons-outlined">home</i><span>Home</span></a>
-            <a href="/filter?category=Music"><i class="material-icons-outlined">music_note</i><span>Music</span></a>
-            <a href="/filter?category=Sport"><i class="material-icons-outlined">sports_soccer</i><span>Sport</span></a>
-            <a href="/filter?category=Gaming"><i
-                    class="material-symbols-outlined">stadia_controller</i><span>Gaming</span></a>
-            <a href="/filter?category=Health"><i
-                    class="material-symbols-outlined">health_and_safety</i><span>Health</span></a>
-            <a href=""><i class="material-symbols-outlined">globe_uk</i><span>General</span></a>
-            <a href="/filter?category=General"><i class="material-icons-outlined">person</i><span>Profile</span></a>
+            <a href="/home">
+                <i class="material-icons-outlined">home</i>
+                <span>Home</span>
+            </a>
+            <a href="/filter?category=Music">
+                <i class="material-icons-outlined">music_note</i>
+                <span>Music</span>
+            </a>
+            <a href="/filter?category=Sport">
+                <i class="material-icons-outlined">sports_soccer</i>
+                <span>Sport</span>
+            </a>
+            <a href="/filter?category=Gaming">
+                <i class="material-symbols-outlined">
+                    stadia_controller
+                </i>
+                <span>Gaming</span>
+            </a>
+            <a href="/filter?category=Health">
+                <i class="material-symbols-outlined">
+                    health_and_safety
+                </i>
+                <span>Health</span>
+            </a>
+            <a href="">
+                <i class="material-symbols-outlined">
+                    globe_uk
+                </i>
+                <span>General</span>
+            </a>
+            <a href="/filter?category=General">
+                <i class="material-icons-outlined">person</i>
+                <span>Profile</span>
+            </a>
             <button class="tweet-button" id="btn">Post</button>
         </div>
+
     </header>
-
-
     <main>
         <div class="main-flex">
             <div class="main-feed">
@@ -108,6 +140,21 @@
                     </div>
                 </div>
 
+                <script>
+                    const modal = document.getElementById('postModal');
+                    const input = document.querySelector('.new-tweet-details input');
+                    const btn = document.getElementById('btn')
+                    const span = document.querySelector('.close');
+                    input.onclick = () => {
+                        modal.style.display = "flex";
+                    };
+                    btn.onclick = () => {
+                        modal.style.display = "flex"
+                    }
+                    window.onclick = (event) => {
+                        if (event.target == modal) modal.style.display = "none";
+                    };
+                </script>
                 <div class="feed-tweet">
                     <img src="profile.png" alt="" class="tweet-img">
                     <div class="feed-tweet-detail">
@@ -130,11 +177,11 @@
                                     <input type="hidden" name="postId" value={{.PostId}}>
                                     <div class="reaction-buttons">
                                         <button class="btns" type="submit" name="reaction" value="1">
-                                            <i class="material-icons-outlined">thumb_up</i>
+                                            <i class="material-icons-outlined {{if eq .Post.Score 1}}active{{end}}" id="like{{.PostId}}">thumb_up</i>
                                             <span id="like-{{.PostId}}">{{.Post.Like}}</span>
                                         </button>
                                         <button class="btns" type="submit" name="reaction" value="-1">
-                                            <i class="material-icons-outlined">thumb_down</i>
+                                            <i class="material-icons-outlined {{if eq .Post.Score -1}}active{{end}}" id="dislike{{.PostId}}">thumb_down</i>
                                             <span id="dislike-{{.PostId}}">{{.Post.Dislike}}</span>
                                         </button>
                                     </div>
@@ -148,77 +195,10 @@
                         </div>
                     </div>
                 </div>
-
-                <h1>Commentaires</h1>
-                <form method="POST" action="/commentaires">
-                    <label for="content">Votre commentaire :</label><br>
-                    <input type="hidden" name="postId" value={{.PostId}}>
-                    <textarea id="content" name="content" placeholder="Votre commentaire..." required></textarea><br>
-                    <button type="submit" class="choosed">Commenter</button>
-                </form>
-                {{range .Comments}}
-                <div class="feed-tweet">
-                    <img src="profile.png" alt="" class="tweet-img">
-                    <div class="feed-tweet-detail">
-                        <div class="tweet-details">
-                            <div class="tweet-user-info">
-                                <a href="" class="tweeter-name">{{.Username}}
-                                    <span class="tweeter-handle">@{{.Username}} .{{.Creation}}</span>
-                                </a>
-                            </div>
-                            <div class="tweet-actions">
-                                <i class="material-icons-outlined" id="horiz">more_horiz</i>
-                            </div>
-                        </div>
-                        <div class="tweet-text">
-                            <p>{{.Content}}</p>
-                        </div>
-                        <div class="tweet-icons">
-                            <div class="reaction">
-                                <form method="POST" action="/commentaires" class="form">
-                                    <input type="hidden" name="commentId" value={{.Id}}>
-                                    <div class="reaction-buttons">
-                                        <button class="btns" type="submit" name="reaction" value="1">
-                                            <i class="material-icons-outlined">thumb_up</i>
-                                            <span id="likecomment-{{.Id}}">{{.Like}}</span>
-                                        </button>
-                                        <button class="btns" type="submit" name="reaction" value="-1">
-                                            <i class="material-icons-outlined">thumb_down</i>
-                                            <span id="dislikecomment-{{.Id}}">{{.Dislike}}</span>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{end}}
-
                 <script>
-                    const selectMenu = document.querySelector('.sBtn-text');
-                    const menuOptions = document.querySelector('.menu-options');
-                    const logoutOption = document.querySelector('.logout-option');
-                    selectMenu.addEventListener('click', () => {
-                        menuOptions.style.display = menuOptions.style.display === 'none' ? 'block' : 'none';
-                    });
-
-                    const modal = document.getElementById('postModal');
-                    const input = document.querySelector('.new-tweet-details input');
-                    const btn = document.getElementById('btn')
-                    const span = document.querySelector('.close');
-                    input.onclick = () => {
-                        modal.style.display = "flex";
-                    };
-                    btn.onclick = () => {
-                        modal.style.display = "flex"
-                    }
-                    window.onclick = (event) => {
-                        if (event.target == modal) modal.style.display = "none";
-                    };
-
                     const formElement = document.querySelectorAll('.form');
                     let ButtonValue;
-
+        
                     // Ajouter l'événement de clic sur tous les formulaires
                     formElement.forEach(FormEll => {
                         FormEll.addEventListener('click', event => {
@@ -227,11 +207,11 @@
                                 console.log(ButtonValue)
                             }
                         });
-
+        
                         // Ajouter l'événement de soumission pour chaque formulaire
                         FormEll.addEventListener('submit', event => {
                             event.preventDefault()
-
+        
                             const data = {
                                 postId: FormEll.querySelector('[name="postId"]').value,
                                 reaction: ButtonValue
@@ -250,55 +230,127 @@
                                     }
                                     const likeElement = document.getElementById(`like-${data.postId}`)
                                     likeElement.textContent = data.like
-
+        
                                     const dislikeElement = document.getElementById(`dislike-${data.postId}`);
                                     dislikeElement.textContent = data.dislike
+                                    const likecolor = document.getElementById(`like${data.postId}`);
+                                    const dislikecolor = document.getElementById(`dislike${data.postId}`);
+                                    if (data.score == 1) {
+                                        likecolor.classList.add('active'); 
+                                        dislikecolor.classList.remove('active');
+                                        
+                                    }else  if (data.score == -1 ) {
+                                        likecolor.classList.remove('active'); 
+                                        dislikecolor.classList.add('active');
+                                    } else {
+                                        likecolor.classList.remove('active'); 
+                                        dislikecolor.classList.remove('active');
+                                    }
                                 })
                                 .catch(err => console.log(err));  // Gérer les erreurs
                         });
                     })
-                    const formElements = document.querySelectorAll('.form');
-                    let clickedButtonValue;
-                    // Ajouter l'événement de clic sur tous les formulaires
-                    formElements.forEach(FormEl => {
-                        FormEl.addEventListener('click', event => {
-                            if (event.target.closest('button[type="submit"]')) {
-                                clickedButtonValue = event.target.closest('button[type="submit"]').value;
-                            }
-                        });
-                        // Ajouter l'événement de soumission pour chaque formulaire
-                        FormEl.addEventListener('submit', event => {
-                            event.preventDefault();
-
-                            const data = {
-                                commentId: FormEl.querySelector('[name="commentId"]').value,
-                                reaction: clickedButtonValue
-                            };
-
-                            // Envoi des données en JSON au serveur
-                            fetch('http://localhost:9090/commentaires', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(data)
-                            })
-                                .then(res => res.json())  // Récupérer la réponse en JSON
-                                .then(data => {
-                                    console.log(data)
-                                    if (data.Error) {
-                                        window.location.href = "/login"
-                                        return
-                                    }
-                                    const likeElement = document.getElementById(`likecomment-${data.commentId}`);
-                                    likeElement.textContent = data.like;
-                                    // Mettre à jour les dislikes
-                                    const dislikeElement = document.getElementById(`dislikecomment-${data.commentId}`);
-                                    dislikeElement.textContent = data.dislike;
-                                })  // Afficher la réponse dans la console
-                                .catch(err => console.log(err));  // Gérer les erreurs
-                        });
-                    });
                 </script>
-
+    <h1>Commentaires</h1>
+    <form method="POST" action="/commentaires">
+        <label for="content">Votre commentaire :</label><br>
+        <input type="hidden" name="postId" value={{.PostId}}>
+        <textarea id="content" name="content" placeholder="Votre commentaire..." required></textarea><br>
+        <button type="submit" class="choosed">Commenter</button>
+    </form>
+    {{range .Comments}}
+    <div class="feed-tweet">
+        <img src="profile.png" alt="" class="tweet-img">
+        <div class="feed-tweet-detail">
+            <div class="tweet-details">
+                <div class="tweet-user-info">
+                    <a href="" class="tweeter-name">{{.Username}}
+                        <span class="tweeter-handle">@{{.Username}} .{{.Creation}}</span>
+                    </a>
+                </div>
+                <div class="tweet-actions">
+                    <i class="material-icons-outlined" id="horiz">more_horiz</i>
+                </div>
+            </div>
+            <div class="tweet-text">
+                <p>{{.Content}}</p>
+            </div>
+            <div class="tweet-icons">
+                <div class="reaction">
+                    <form method="POST" action="/commentaires" class="form">
+                        <input type="hidden" name="commentId" value={{.Id}}>
+                        <div class="reaction-buttons">
+                            <button class="btns" type="submit" name="reaction" value="1">
+                                <i class="material-icons-outlined {{if eq .Score 1}}active{{end}}" id="likecomment{{.Id}}">thumb_up</i>
+                                <span id="likecomment-{{.Id}}">{{.Like}}</span>
+                            </button>
+                            <button class="btns" type="submit" name="reaction" value="-1">
+                                <i class="material-icons-outlined{{if eq .Score -1}}active{{end}}"id="dislikecomment{{.Id}}">thumb_down</i>
+                                <span id="dislikecomment-{{.Id}}">{{.Dislike}}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{end}}
+  
+    <script>
+        const formElements = document.querySelectorAll('.form');
+        let clickedButtonValue;
+        // Ajouter l'événement de clic sur tous les formulaires
+        formElements.forEach(FormEl => {
+            FormEl.addEventListener('click', event => {
+                if (event.target.closest('button[type="submit"]')) {
+                            clickedButtonValue = event.target.closest('button[type="submit"]').value;
+                        }
+            });
+            // Ajouter l'événement de soumission pour chaque formulaire
+            FormEl.addEventListener('submit', event => {
+                event.preventDefault();
+                
+                const data = {
+                    commentId: FormEl.querySelector('[name="commentId"]').value,
+                    reaction: clickedButtonValue
+                };
+        
+                // Envoi des données en JSON au serveur
+                fetch('http://localhost:9090/commentaires', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(res => res.json())  // Récupérer la réponse en JSON
+                .then(data => {
+                    console.log(data)
+                    if (data.Error) {
+                                 window.location.href = "/login"
+                                    return
+                                }
+                    const likeElement = document.getElementById(`likecomment-${data.commentId}`);
+                    likeElement.textContent = data.like;
+                 const dislikeElement = document.getElementById(`dislikecomment-${data.commentId}`);
+                    dislikeElement.textContent = data.dislike;
+                                     const likecolor = document.getElementById(`likecomment${data.commentId}`);
+                                    const dislikecolor = document.getElementById(`dislikecomment${data.commentId}`);
+                                    console.log(likecolor)
+                                        if (data.score == 1) {
+                                            likecolor.classList.add('active'); 
+                                            dislikecolor.classList.remove('active');
+                                            
+                                        }else  if (data.score == -1 ) {
+                                            likecolor.classList.remove('active'); 
+                                            dislikecolor.classList.add('active');
+                                        } else {
+                                            likecolor.classList.remove('active'); 
+                                            dislikecolor.classList.remove('active');
+                                        }
+                })  // Afficher la réponse dans la console
+                .catch(err => console.log(err));  // Gérer les erreurs
+            });
+        });
+        </script>
+         
 </body>
-
 </html>

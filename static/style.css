@@ -275,6 +275,9 @@ main {
   gap: 5px;
 }
 
+.material-icons-outlined.active {
+  color: orange !important;
+}
 .comments {
   display: flex;
   align-items: center;
@@ -282,7 +285,7 @@ main {
 }
 
 .categorie {
-  background-color: #0051ff;
+  background-color: #ff9900;
   color: black;
   padding: 3px 6px;
   border-radius: 4px;
@@ -414,7 +417,6 @@ main {
   /* border: solid 1px; */
 }
 
-.follow-profile {}
 
 .follow-details {
   display: flex;
@@ -491,7 +493,7 @@ main {
 
 .Logo .Name span {
   color: black;
-  background-color: #0051ff;
+  background-color: #ff9900;
   margin-right: 5px;
   padding: 2px 8px;
   border-radius: 4px;
@@ -605,7 +607,7 @@ main {
   justify-content: center;
   align-items: center;
   height: fit-content;
-  background-color: #00a2ff;
+  background-color: #ff9900;
   color: black;
   gap: 7px;
   padding: 10px;
@@ -679,7 +681,7 @@ nav {
 }
 
 .reaction i {
-  color: #ff9900;
+  color:rgb(240, 240, 240);
 }
 
 p {
@@ -705,7 +707,7 @@ button span {
 .categorie {
   color: rgb(0, 0, 0);
   width: 70px;
-  background-color: #0084ff;
+  background-color: #ff9900;
   border-radius: 4px;
   height: fit-content;
   text-align: center;
@@ -862,7 +864,7 @@ label {
 }
 
 .topic-options label:hover {
-  border-color: #0044ff;
+  border-color: #ff8000;
 }
 
 .topic-options input[type="radio"] {
@@ -891,7 +893,7 @@ label {
 
 .model button {
   width: 100%;
-  background: #0051ff;
+  background: #ff8000;
   color: #1a1a1a;
   border: none;
   padding: 15px;

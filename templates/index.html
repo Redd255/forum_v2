@@ -7,33 +7,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
-    <link rel="stylesheet" href="../static/style.css">
-
+    <link rel="stylesheet" href="/static/style.css">
     <title>Talent Hub</title>
 </head>
 
 <body>
-
-    <!-- navbare -->
     <nav>
-        <a href="/home" class="Logo"><span class="Name">Talent <span>hub</span></span></a>
+        <a href="/home" class="Logo">
+            <span class="Name">Talent <span>hub</span></span>
+        </a>
         <div class="search-box">
             <input type="text" id="srch" placeholder="Search...">
             <div id="search-results"></div>
             <button type="submit"><span class="material-symbols-outlined">search</span></button>
         </div>
         <div class="RightHeaderSection">
-            <div class="main-account"></div>
+            <div class="main-account">
+            </div>
         </div>
         {{if .Logout}}
         <div class="log">
             <div class="SignOptions">
-                <a href="/login" class="Buttons"><i class="material-symbols-outlined">login</i><span>Login /
-                        Register</span></a>
+                <a href="/login" class="Buttons">
+                    <i class="material-symbols-outlined">login</i>
+                    <span>Login / Register</span>
+                </a>
             </div>
-
             {{else}}
-            <img class="sBtn-text" src="../static/profile.png" alt="Profile">
+            <img class="sBtn-text" src="profile.png" alt="Profile">
             <ul class="menu-options" style="display: none; color: white;font-size: 18px; text-decoration: none;">
                 <li class="menu-item">
                     <span class="material-symbols-outlined">person</span>
@@ -46,33 +47,61 @@
             </ul>
             {{end}}
     </nav>
+    <script>
+        const selectMenu = document.querySelector('.sBtn-text');
+        const menuOptions = document.querySelector('.menu-options');
+        const logoutOption = document.querySelector('.logout-option');
+        selectMenu.addEventListener('click', () => {
+            menuOptions.style.display = menuOptions.style.display === 'none' ? 'block' : 'none';
+        });
 
-    <!-- header -->
+    </script>
+
     <header>
         <div class="nav-links">
-            <a href="/home"><i class="material-icons-outlined">home</i> <span>Home</span></a>
-            <a href="/filter?category=Music"><i class="material-icons-outlined">music_note</i> <span>Music</span></a>
-            <a href="/filter?category=Sport"><i class="material-icons-outlined">sports_soccer</i> <span>Sport</span></a>
-            <a href="/filter?category=Gaming"><i class="material-symbols-outlined">stadia_controller</i>
-                <span>Gaming</span></a>
-            <a href="/filter?category=Health"><i class="material-symbols-outlined">health_and_safety</i>
-                <span>Health</span></a>
-            <a href="/filter?category=General"><i class="material-symbols-outlined">globe_uk</i>
-                <span>General</span></a>
-            <a href="#"><i class="material-icons-outlined">person</i> <span>Profile</span></a>
+            <a href="/home">
+                <i class="material-icons-outlined">home</i>
+                <span>Home</span>
+            </a>
+            <a href="/filter?category=Music">
+                <i class="material-icons-outlined">music_note</i>
+                <span>Music</span>
+            </a>
+            <a href="/filter?category=Sport">
+                <i class="material-icons-outlined">sports_soccer</i>
+                <span>Sport</span>
+            </a>
+            <a href="/filter?category=Gaming">
+                <i class="material-symbols-outlined">
+                    stadia_controller
+                </i>
+                <span>Gaming</span>
+            </a>
+            <a href="/filter?category=Health">
+                <i class="material-symbols-outlined">
+                    health_and_safety
+                </i>
+                <span>Health</span>
+            </a>
+            <a href="/filter?category=General">
+                <i class="material-symbols-outlined">
+                    globe_uk
+                </i>
+                <span>General</span>
+            </a>
+            <a href="">
+                <i class="material-icons-outlined">person</i>
+                <span>Profile</span>
+            </a>
             <button class="tweet-button" id="btn">Post</button>
         </div>
-        <!-- <span class="material-symbols-outlined">
-            border_color
-            </span> -->
+
     </header>
-
-
     <main>
         <div class="main-flex">
             <div class="main-feed">
                 <div class="new-tweet">
-                    <img src="../static/profile.png" alt="" class="tweet-img">
+                    <img src="profile.png" alt="" class="tweet-img">
                     <div class="new-tweet-details">
                         <input type="text" placeholder="What's happening?">
                     </div>
@@ -111,6 +140,21 @@
                     </div>
                 </div>
 
+                <script>
+                    const modal = document.getElementById('postModal');
+                    const input = document.querySelector('.new-tweet-details input');
+                    const btn = document.getElementById('btn')
+                    const span = document.querySelector('.close');
+                    input.onclick = () => {
+                        modal.style.display = "flex";
+                    };
+                    btn.onclick = () => {
+                        modal.style.display = "flex"
+                    }
+                    window.onclick = (event) => {
+                        if (event.target == modal) modal.style.display = "none";
+                    };
+                </script>
                 {{range .Posts}}
                 <div class="feed-tweet">
                     <img src="profile.png" alt="" class="tweet-img">
@@ -134,29 +178,85 @@
                                     <input type="hidden" name="postId" value={{.Id}}>
                                     <div class="reaction-buttons">
                                         <button class="btns" type="submit" name="reaction" value="1">
-                                            <i class="material-icons-outlined">thumb_up</i>
+                                            <i class="material-icons-outlined {{ if eq .Score 1 }}active{{ end }}" id="like{{.Id}}">thumb_up</i>
                                             <span id="like-{{.Id}}">{{.Like}}</span>
                                         </button>
-                                        <button class="btns" type="submit" name="reaction" value="-1">
-                                            <i class="material-icons-outlined">thumb_down</i>
+                                        <button class="btns" type="submit" name="reaction" value="-1" >
+                                            <i class="material-icons-outlined {{ if eq .Score -1 }}active{{ end }}" id="dislike{{.Id}}">thumb_down</i>
                                             <span id="dislike-{{.Id}}">{{.Dislike}}</span>
                                         </button>
                                     </div>
                                 </form>
                             </div>
                             <a href="/commentaires?postId={{.Id}}">
-                                <div class="comments">
-                                    <i class="material-icons-outlined">chat_bubble</i>
-                                    <p> {{.Commentcount}} </p>
-                                </div>
-                            </a>
+                            <div class="comments">
+                                <i class="material-icons-outlined">chat_bubble</i>
+                                <p> {{.Commentcount}} </p>
+                            </div>
+                        </a>
                             <div class="categorie">#{{.Topic}}</div>
                         </div>
                     </div>
                 </div>
                 {{end}}
             </div>
+            <script>
+                const formElements = document.querySelectorAll('.form');
+                let clickedButtonValue;
 
+                // Ajouter l'événement de clic sur tous les formulaires
+                formElements.forEach(FormEl => {
+                    FormEl.addEventListener('click', event => {
+                        if (event.target.closest('button[type="submit"]')) {
+                            clickedButtonValue = event.target.closest('button[type="submit"]').value;
+                        }
+                    });
+
+                    // Ajouter l'événement de soumission pour chaque formulaire
+                    FormEl.addEventListener('submit', event => {
+                        event.preventDefault()
+
+                        const data = {
+                            postId: FormEl.querySelector('[name="postId"]').value,
+                            reaction: clickedButtonValue
+                        }
+
+                        // Envoi des données en JSON au serveur
+                        fetch('http://localhost:9090/react', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        })
+                            .then(res => res.json())  // Récupérer la réponse en JSON
+                            .then(data => {
+                                if (data.error) {
+                                    window.location.href = "/login"
+                                    return
+                                }
+                                const likeElement = document.getElementById(`like-${data.postId}`)
+                                likeElement.textContent = data.like
+                                
+                                const dislikeElement = document.getElementById(`dislike-${data.postId}`);
+                                dislikeElement.textContent = data.dislike
+                                const likecolor = document.getElementById(`like${data.postId}`);
+                                const dislikecolor = document.getElementById(`dislike${data.postId}`);
+                                    if (data.score == 1) {
+                                        likecolor.classList.add('active'); 
+                                        dislikecolor.classList.remove('active');
+                                        
+                                    }else  if (data.score == -1 ) {
+                                        likecolor.classList.remove('active'); 
+                                        dislikecolor.classList.add('active');
+                                    } else {
+                                        likecolor.classList.remove('active'); 
+                                        dislikecolor.classList.remove('active');
+                                    }
+                                                                
+                            })
+                            .catch(err => console.log(err));  // Gérer les erreurs
+                    });
+                })
+            </script>
 
 
             <div class="follow">
@@ -186,72 +286,6 @@
         </div>
     </main>
 
-    <script>
-        const modal = document.getElementById('postModal');
-        const input = document.querySelector('.new-tweet-details input');
-        const btn = document.getElementById('btn')
-        const span = document.querySelector('.close');
-        input.onclick = () => {
-            modal.style.display = "flex";
-        };
-        btn.onclick = () => {
-            modal.style.display = "flex"
-        }
-        window.onclick = (event) => {
-            if (event.target == modal) modal.style.display = "none";
-        };
-
-
-        const selectMenu = document.querySelector('.sBtn-text');
-        const menuOptions = document.querySelector('.menu-options');
-        const logoutOption = document.querySelector('.logout-option');
-        selectMenu.addEventListener('click', () => {
-            menuOptions.style.display = menuOptions.style.display === 'none' ? 'block' : 'none';
-        });
-
-
-        const formElements = document.querySelectorAll('.form');
-        let clickedButtonValue;
-
-        // Ajouter l'événement de clic sur tous les formulaires
-        formElements.forEach(FormEl => {
-            FormEl.addEventListener('click', event => {
-                if (event.target.closest('button[type="submit"]')) {
-                    clickedButtonValue = event.target.closest('button[type="submit"]').value;
-                }
-            });
-
-            // Ajouter l'événement de soumission pour chaque formulaire
-            FormEl.addEventListener('submit', event => {
-                event.preventDefault()
-
-                const data = {
-                    postId: FormEl.querySelector('[name="postId"]').value,
-                    reaction: clickedButtonValue
-                }
-
-                // Envoi des données en JSON au serveur
-                fetch('http://localhost:9090/react', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                })
-                    .then(res => res.json())  // Récupérer la réponse en JSON
-                    .then(data => {
-                        if (data.error) {
-                            window.location.href = "/login"
-                            return
-                        }
-                        const likeElement = document.getElementById(`like-${data.postId}`)
-                        likeElement.textContent = data.like
-
-                        const dislikeElement = document.getElementById(`dislike-${data.postId}`);
-                        dislikeElement.textContent = data.dislike
-                    })
-                    .catch(err => console.log(err));  // Gérer les erreurs
-            });
-        })
-    </script>
 </body>
 
 </html>

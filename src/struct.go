@@ -27,6 +27,7 @@ type comment struct {
 	Like     int
 	Dislike  int
 	PostId   int
+	Score    int
 }
 
 type post struct {
@@ -38,6 +39,7 @@ type post struct {
 	Like         int
 	Dislike      int
 	Commentcount int
+	Score        int
 }
 
 type data struct {
@@ -64,8 +66,9 @@ type Creation struct {
 	Rreaction string `json:"reaction"`
 }
 type Response struct {
-	PostID  int  `json:"postId"`
-	Like    int  `json:"like"`
-	Dislike int  `json:"dislike"`
-	Error   bool `json:"error"`
+	CommentId int `json:"commentId"`
+	Like      int `json:"like"`
+	Dislike   int `json:"dislike"`
+	Score     int `json:"score"`
 }
+
