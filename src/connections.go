@@ -78,22 +78,30 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	uuid, _ := GenerateUUID()
+	uuid, err := GenerateUUID()
+	if err != nil {
+		log.Printf("UUID generation error: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 	cookie := http.Cookie{
 		Name:     "session_token",
 		Value:    uuid,
 		HttpOnly: true,
 		Secure:   true,
+		Path:     "/",
+		// SameSite: http.SameSiteLaxMode,
+		// MaxAge:   86400,
 	}
+
 	http.SetCookie(w, &cookie)
-	statement, err := db.Prepare("INSERT INTO sessions (token,username) VALUES (?,?)")
+
+	_, err = db.Exec("INSERT INTO sessions (token,username) VALUES (?,?)", uuid, Username)
 	if err != nil {
-		log.Println("Erreur lors de la préparation de la requête :", err)
-		http.Error(w, "Erreur interne du serveur", http.StatusInternalServerError)
+		log.Printf("Session insertion error: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	statement.Exec(uuid, Username)
-	defer statement.Close()
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
