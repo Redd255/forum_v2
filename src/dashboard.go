@@ -11,20 +11,21 @@ import (
 )
 
 func Createdposthandler(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("session_token")
+	c, err := r.Cookie("session_token")
 	if err != nil {
 		Logout = true
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
-	
 	Logout = false
-	uuid := cookie.Value
+	uuid := c.Value
+	row := db.QueryRow("SELECT username FROM sessions WHERE token= ?", uuid)
 	var username string
-	db.QueryRow("SELECT username FROM sessions WHERE token= ?", uuid).Scan(&username)
-
+	err = row.Scan(&username)
+	if err != nil {
+	}
 	var createdpost []post
-	nrow, _ := db.Query("SELECT id ,username,content,topic,like,dislike,commentcount,create_at FROM posts WHERE username =?", username)
+	nrow, _ := db.Query("SELECT id ,username,content,topic,like,dislike,commentcount,create_at FROM posts WHERE username =? ORDER BY create_at DESC", username)
 	for nrow.Next() {
 		var post post
 		var Ctime time.Time
@@ -37,7 +38,6 @@ func Createdposthandler(w http.ResponseWriter, r *http.Request) {
 		createdpost = append(createdpost, post)
 	}
 
-	slices.Reverse(createdpost)
 	Data := data{
 		Username: username,
 		Posts:    createdpost,
