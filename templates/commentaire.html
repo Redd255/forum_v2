@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style3.css">
     <title>Talent Hub</title>
 </head>
 
@@ -34,7 +34,7 @@
                 </a>
             </div>
             {{else}}
-            <img class="sBtn-text" src="profile.png" alt="Profile">
+            <img class="sBtn-text" src="/static/profile.png" alt="Profile">
             <ul class="menu-options" style="display: none; color: white;font-size: 18px; text-decoration: none;">
                 <li class="menu-item">
                     <span class="material-symbols-outlined">person</span>
@@ -100,46 +100,6 @@
     <main>
         <div class="main-flex">
             <div class="main-feed">
-                <div class="new-tweet">
-                    <img src="profile.png" alt="" class="tweet-img">
-                    <div class="new-tweet-details">
-                        <input type="text" placeholder="What's happening?">
-                    </div>
-                </div>
-                <div id="postModal" class="modal">
-                    <div class="modal-content">
-                        <form method="post" action="/posts">
-                            <input required type="text" class="title">
-
-                            <div class="text-area" placeholder="Title...">
-                                <textarea placeholder="What's on your mind?" name="content" rows="4"
-                                    required></textarea>
-                            </div>
-
-
-                            <div class="topic-options">
-                                <input type="radio" id="music" name="topic" value="Music" required>
-                                <label for="music">Music</label>
-
-                                <input type="radio" id="sport" name="topic" value="Sport">
-                                <label for="sport">Sport</label>
-
-                                <input type="radio" id="gaming" name="topic" value="Gaming">
-                                <label for="gaming">Gaming</label>
-
-                                <input type="radio" id="health" name="topic" value="Health">
-                                <label for="health">Health</label>
-
-                                <input type="radio" id="general" name="topic" value="General">
-                                <label for="general">General</label>
-                            </div>
-                            <div>
-                                <button class="choosed" type="submit">Publish</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
                 <script>
                     const modal = document.getElementById('postModal');
                     const input = document.querySelector('.new-tweet-details input');
@@ -156,7 +116,7 @@
                     };
                 </script>
                 <div class="feed-tweet">
-                    <img src="profile.png" alt="" class="tweet-img">
+                    <img src="/static/profile.png" alt="" class="tweet-img">
                     <div class="feed-tweet-detail">
                         <div class="tweet-details">
                             <div class="tweet-user-info">
@@ -260,7 +220,7 @@
     </form>
     {{range .Comments}}
     <div class="feed-tweet">
-        <img src="profile.png" alt="" class="tweet-img">
+        <img src="/static/profile.png" alt="" class="tweet-img">
         <div class="feed-tweet-detail">
             <div class="tweet-details">
                 <div class="tweet-user-info">

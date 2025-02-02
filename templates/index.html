@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style2.css">
     <title>Talent Hub</title>
 </head>
 
@@ -34,15 +34,16 @@
                 </a>
             </div>
             {{else}}
-            <img class="sBtn-text" src="profile.png" alt="Profile">
+            <img class="sBtn-text" src="/static/profile.png" alt="Profile">
             <ul class="menu-options" style="display: none; color: white;font-size: 18px; text-decoration: none;">
                 <li class="menu-item">
                     <span class="material-symbols-outlined">person</span>
                     {{.Username}}
                 </li>
                 <li class="menu-item logout-option">
-                    <span class="material-symbols-outlined">logout</span>
-                    <a href="/logout">Logout</a>
+                    <a href="/logout" id="logout">
+                        <span class="material-symbols-outlined">logout</span> Logout
+                    </a>
                 </li>
             </ul>
             {{end}}
@@ -101,7 +102,7 @@
         <div class="main-flex">
             <div class="main-feed">
                 <div class="new-tweet">
-                    <img src="profile.png" alt="" class="tweet-img">
+                    <img src="/static/profile.png" alt="" class="tweet-img">
                     <div class="new-tweet-details">
                         <input type="text" placeholder="What's happening?">
                     </div>
@@ -157,7 +158,7 @@
                 </script>
                 {{range .Posts}}
                 <div class="feed-tweet">
-                    <img src="profile.png" alt="" class="tweet-img">
+                    <img src="/static/profile.png" alt="" class="tweet-img">
                     <div class="feed-tweet-detail">
                         <div class="tweet-details">
                             <div class="tweet-user-info">
@@ -187,13 +188,11 @@
                                         </button>
                                     </div>
                                 </form>
+                                <a href="/commentaires?postId={{.Id}}" class="comment-btn">
+                                    <i class="material-icons-outlined">mode_comment</i>
+                                    <span class="count">{{.Commentcount}}</span>
+                                </a>
                             </div>
-                            <a href="/commentaires?postId={{.Id}}">
-                            <div class="comments">
-                                <i class="material-icons-outlined">chat_bubble</i>
-                                <p> {{.Commentcount}} </p>
-                            </div>
-                        </a>
                             <div class="categorie">#{{.Topic}}</div>
                         </div>
                     </div>
