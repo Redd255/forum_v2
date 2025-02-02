@@ -107,10 +107,6 @@ button:hover {
     display: flex;
     justify-content: space-between;
     margin: 20px 0;
-}
-
-.remember-me {
-    display: flex;
     align-items: center;
     gap: 5px;
     color: #666;
