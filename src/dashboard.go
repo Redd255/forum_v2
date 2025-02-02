@@ -246,10 +246,7 @@ func Commentairehandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	Id, _ := strconv.Atoi(r.URL.Query().Get("postId"))
-	c, _ := r.Cookie("session_token")
-	uuid := c.Value
-	ro := db.QueryRow("SELECT username FROM sessions WHERE token =?", uuid)
-	ro.Scan(&userComment)
+
 	rows, err := db.Query("SELECT id,content,username, like , dislike, create_at FROM comments WHERE post_id = ?", Id)
 	if err != nil {
 		panic(err)
@@ -260,8 +257,6 @@ func Commentairehandler(w http.ResponseWriter, r *http.Request) {
 		var Ctime time.Time
 		err := rows.Scan(&newcomment.Id, &newcomment.Content, &newcomment.Username, &newcomment.Like, &newcomment.Dislike, &Ctime)
 		newcomment.Creation = convertime(time.Now().Unix() - Ctime.Unix())
-		r := db.QueryRow("SELECT score FROM comment_reaction WHERE comment_id = ? AND username = ?", newcomment.Id, userComment)
-		r.Scan(&newcomment.Score)
 		if err == nil {
 			newcomment.PostId = Id
 			comments = append(comments, newcomment)

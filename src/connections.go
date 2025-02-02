@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"slices"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -12,40 +11,45 @@ import (
 
 func Homehandelr(w http.ResponseWriter, r *http.Request) {
 	var Username string
-	a, err := r.Cookie("session_token")
+	cookie, err := r.Cookie("session_token")
 	if err == nil {
 		Logout = false
-		uuid := a.Value
-		rows := db.QueryRow("SELECT username FROM  sessions WHERE token =? ", uuid)
-		err := rows.Scan(&Username)
-		if err == sql.ErrNoRows {
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
-		}
+		uuid := cookie.Value
+		db.QueryRow("SELECT username FROM  sessions WHERE token =? ", uuid).Scan(&Username)
 	} else {
 		Logout = true
 	}
-	rows, err := db.Query("SELECT id ,username,content,topic,like,dislike,commentcount,create_at FROM posts")
+
+	rows, err := db.Query("SELECT id, username, content, topic, like , dislike , commentcount, create_at FROM posts ORDER BY create_at DESC")
 	if err != nil {
-		panic(err)
+		return
 	}
+
 	var posts = []post{}
 	for rows.Next() {
 		var newPost post
 		var Ctime time.Time
-		rows.Scan(&newPost.Id, &newPost.Username, &newPost.Content, &newPost.Topic, &newPost.Like, &newPost.Dislike, &newPost.Commentcount, &Ctime)
+		rows.Scan(
+			&newPost.Id,
+			&newPost.Username,
+			&newPost.Content,
+			&newPost.Topic,
+			&newPost.Like,
+			&newPost.Dislike,
+			&newPost.Commentcount,
+			&Ctime)
 		newPost.Creation = convertime(time.Now().Unix() - Ctime.Unix())
 		r := db.QueryRow("SELECT score FROM post_reaction WHERE post_id = ? AND username = ?", newPost.Id, Username)
 		r.Scan(&newPost.Score)
 		posts = append(posts, newPost)
 	}
-	slices.Reverse(posts)
+
 	Data := data{
 		Username: Username,
 		Posts:    posts,
 		Logout:   Logout,
 	}
 	tmpl.ExecuteTemplate(w, "index.html", Data)
-
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {

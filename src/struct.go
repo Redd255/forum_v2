@@ -12,12 +12,7 @@ func InitHandlers(database *sql.DB) {
 	db = database
 }
 
-var tmpl = template.Must(template.ParseFiles(
-	"templates/index.html",
-	"templates/login.html",
-	"templates/filter1.html",
-	"templates/signup.html",
-	"templates/commentaire.html"))
+var tmpl = template.Must(template.ParseGlob("templates/*",))
 
 type comment struct {
 	Id       int
