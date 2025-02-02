@@ -49,15 +49,21 @@ func Homehandelr(w http.ResponseWriter, r *http.Request) {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
+	_, err := r.Cookie("session_token")
+	if err == nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 	if r.Method != http.MethodPost {
 		tmpl.ExecuteTemplate(w, "login.html", nil)
 		return
 	}
+
 	Username := r.FormValue("username")
 	Password := r.FormValue("password")
 
 	var hashedPassword string
-	err := db.QueryRow("SELECT password FROM users WHERE username = ?", Username).Scan(&hashedPassword)
+	err = db.QueryRow("SELECT password FROM users WHERE username = ?", Username).Scan(&hashedPassword)
 	if err == sql.ErrNoRows {
 		errorPage(w, "Invalid username", "login.html")
 		return
@@ -93,11 +99,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Signup(w http.ResponseWriter, r *http.Request) {
+	_, err := r.Cookie("session_token")
+	if err == nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 	if r.Method != http.MethodPost {
 		tmpl.ExecuteTemplate(w, "signup.html", nil)
 		return
 	}
-
 	username := r.FormValue("username")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
@@ -108,7 +118,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var existingEmail string
-	err := db.QueryRow("SELECT email FROM users WHERE email = ?", email).Scan(&existingEmail)
+	err = db.QueryRow("SELECT email FROM users WHERE email = ?", email).Scan(&existingEmail)
 	if err == nil {
 		errorPage(w, "Email already in use", "signup.html")
 		return
