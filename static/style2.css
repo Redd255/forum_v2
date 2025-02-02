@@ -38,7 +38,22 @@ nav {
   color: white;
 }
 
+.SignOptions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
+}
+
+.Buttona{
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+}
 
 .Logo span {
   color: #000000;
@@ -48,6 +63,7 @@ nav {
   border: 2px solid #ff9000;
   font-size: 20px;
 }
+
 
 /* Search box */
 .search-box {

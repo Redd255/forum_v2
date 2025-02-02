@@ -28,12 +28,14 @@
 
         {{if .Logout}}
         <div class="log">
+
             <div class="SignOptions">
-                <a href="/login" class="Buttons">
+                <a href="/login" class="Buttona">
                     <i class="material-symbols-outlined">login</i>
                     <span>Login / Register</span>
                 </a>
             </div>
+
             {{else}}
             <img class="sBtn-text" src="/static/profile.png" alt="Profile">
             <ul class="menu-options" style="display: none; color: white;font-size: 18px; text-decoration: none;">
@@ -48,7 +50,7 @@
                 </li>
             </ul>
             {{end}}
-            
+        </div>
     </nav>
     <script>
         const selectMenu = document.querySelector('.sBtn-text');
@@ -181,11 +183,13 @@
                                     <input type="hidden" name="postId" value={{.Id}}>
                                     <div class="reaction-buttons">
                                         <button class="btns" type="submit" name="reaction" value="1">
-                                            <i class="material-icons-outlined {{ if eq .Score 1 }}active{{ end }}" id="like{{.Id}}">thumb_up</i>
+                                            <i class="material-icons-outlined {{ if eq .Score 1 }}active{{ end }}"
+                                                id="like{{.Id}}">thumb_up</i>
                                             <span id="like-{{.Id}}">{{.Like}}</span>
                                         </button>
-                                        <button class="btns" type="submit" name="reaction" value="-1" >
-                                            <i class="material-icons-outlined {{ if eq .Score -1 }}active{{ end }}" id="dislike{{.Id}}">thumb_down</i>
+                                        <button class="btns" type="submit" name="reaction" value="-1">
+                                            <i class="material-icons-outlined {{ if eq .Score -1 }}active{{ end }}"
+                                                id="dislike{{.Id}}">thumb_down</i>
                                             <span id="dislike-{{.Id}}">{{.Dislike}}</span>
                                         </button>
                                     </div>
@@ -236,23 +240,23 @@
                                 }
                                 const likeElement = document.getElementById(`like-${data.postId}`)
                                 likeElement.textContent = data.like
-                                
+
                                 const dislikeElement = document.getElementById(`dislike-${data.postId}`);
                                 dislikeElement.textContent = data.dislike
                                 const likecolor = document.getElementById(`like${data.postId}`);
                                 const dislikecolor = document.getElementById(`dislike${data.postId}`);
-                                    if (data.score == 1) {
-                                        likecolor.classList.add('active'); 
-                                        dislikecolor.classList.remove('active');
-                                        
-                                    }else  if (data.score == -1 ) {
-                                        likecolor.classList.remove('active'); 
-                                        dislikecolor.classList.add('active');
-                                    } else {
-                                        likecolor.classList.remove('active'); 
-                                        dislikecolor.classList.remove('active');
-                                    }
-                                                                
+                                if (data.score == 1) {
+                                    likecolor.classList.add('active');
+                                    dislikecolor.classList.remove('active');
+
+                                } else if (data.score == -1) {
+                                    likecolor.classList.remove('active');
+                                    dislikecolor.classList.add('active');
+                                } else {
+                                    likecolor.classList.remove('active');
+                                    dislikecolor.classList.remove('active');
+                                }
+
                             })
                             .catch(err => console.log(err));  // Gérer les erreurs
                     });
