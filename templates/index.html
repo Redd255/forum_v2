@@ -13,18 +13,19 @@
 
 <body>
     <nav>
-        <a href="/home" class="Logo">
-            <span class="Name">Talent <span>hub</span></span>
-        </a>
+        <a href="/home" class="Logo">Talent <span>hub</span></a>
+
         <div class="search-box">
             <input type="text" id="srch" placeholder="Search...">
             <div id="search-results"></div>
             <button type="submit"><span class="material-symbols-outlined">search</span></button>
         </div>
+
         <div class="RightHeaderSection">
             <div class="main-account">
             </div>
         </div>
+
         {{if .Logout}}
         <div class="log">
             <div class="SignOptions">
@@ -47,6 +48,7 @@
                 </li>
             </ul>
             {{end}}
+            
     </nav>
     <script>
         const selectMenu = document.querySelector('.sBtn-text');

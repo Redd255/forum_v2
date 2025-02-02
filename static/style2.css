@@ -33,15 +33,14 @@ nav {
 
 .Logo {
   text-decoration: none;
-}
-
-.Name {
   font-size: 24px;
   font-weight: bold;
   color: white;
 }
 
-.Name span {
+
+
+.Logo span {
   color: #000000;
   background: #ff9000;
   padding: 2px 8px;

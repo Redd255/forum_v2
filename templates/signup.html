@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TalentHub</title>
     <link rel="stylesheet" href="../static/style1.css">
 </head>
+
 <body>
     <div class="form-wrapper">
         <div class="Logo">
-        <span class="Name">Talent <span>hub</span></span>
-    </div>
+            <span class="Name">Talent <span>hub</span></span>
+        </div>
         <form action="/signup" method="post">
             {{ if .ErrorMessage }}
             <div class="error-message" style="padding: 20px ;color: tomato;">{{ .ErrorMessage }}</div>
@@ -31,15 +33,14 @@
             </div>
 
             <button type="submit">Sign Up</button>
-                <div class="remember-me">
-                    <input type="checkbox" id="remember-me">
-                    <label for="remember-me">Remember me</label>
-                </div>
+            <div class="remember-me">
+                <input type="checkbox" id="remember-me">
+                <label for="remember-me">Remember me</label>
+            </div>
         </form>
         <p>Already have an account? <a href="/login">Sign In</a></p>
-        <small>
-            TalentHub is a vibrant online community. 
-        </small>
+        <small>TalentHub is a vibrant online community.</small>
     </div>
 </body>
+
 </html>
