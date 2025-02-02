@@ -11,18 +11,22 @@
         <div class="Logo">
         <span class="Name">Talent <span>hub</span></span>
     </div>
+
         <form action="/login" method="post">
             {{ if .ErrorMessage }}
             <div class="error-message" style="padding: 20px ;color: tomato;">{{ .ErrorMessage }}</div>
             {{ end }}
+
             <div class="form-control">
                 <input type="text" name="username" required>
                 <label>Username</label>
             </div>
+
             <div class="form-control">
                 <input type="password" name="password" required>
                 <label>Password</label>
             </div>
+
             <button type="submit">Sign In</button>
             <div class="form-help"> 
                 <div class="remember-me">
@@ -31,10 +35,9 @@
                 </div>
             </div>
         </form>
+        
         <p>New to TalentHub ? <a href="/signup">Sign up now</a></p>
-        <small>
-            TalentHub is a vibrant online community. 
-        </small>
+        <small>TalentHub is a vibrant online community.</small>
     </div>
 </body>
 </html>
