@@ -11,19 +11,18 @@ import (
 )
 
 func Createdposthandler(w http.ResponseWriter, r *http.Request) {
-	c, err := r.Cookie("session_token")
+	cookie, err := r.Cookie("session_token")
 	if err != nil {
 		Logout = true
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
+	
 	Logout = false
-	uuid := c.Value
-	row := db.QueryRow("SELECT username FROM sessions WHERE token= ?", uuid)
+	uuid := cookie.Value
 	var username string
-	err = row.Scan(&username)
-	if err != nil {
-	}
+	db.QueryRow("SELECT username FROM sessions WHERE token= ?", uuid).Scan(&username)
+
 	var createdpost []post
 	nrow, _ := db.Query("SELECT id ,username,content,topic,like,dislike,commentcount,create_at FROM posts WHERE username =?", username)
 	for nrow.Next() {

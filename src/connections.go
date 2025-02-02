@@ -39,8 +39,7 @@ func Homehandelr(w http.ResponseWriter, r *http.Request) {
 			&newPost.Commentcount,
 			&Ctime)
 		newPost.Creation = convertime(time.Now().Unix() - Ctime.Unix())
-		r := db.QueryRow("SELECT score FROM post_reaction WHERE post_id = ? AND username = ?", newPost.Id, Username)
-		r.Scan(&newPost.Score)
+		db.QueryRow("SELECT score FROM post_reaction WHERE post_id = ? AND username = ?", newPost.Id, Username).Scan(&newPost.Score)
 		posts = append(posts, newPost)
 	}
 
