@@ -103,7 +103,7 @@ button:hover {
 }
 
 /* Form help section */
-.form-help {
+.remember-me {
     display: flex;
     justify-content: space-between;
     margin: 20px 0;
