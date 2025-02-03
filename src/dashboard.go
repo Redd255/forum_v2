@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"slices"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -103,7 +104,7 @@ func Filterhandler(w http.ResponseWriter, r *http.Request) {
 		row.Scan(&user)
 		Logout = false
 	}
-	rows, err := db.Query("SELECT id ,username,content,topic,like,dislike,commentcount,create_at FROM posts WHERE topic =?", topic)
+	rows, err := db.Query("SELECT id ,username,content,topic,like,dislike,commentcount,create_at FROM posts WHERE topic LIKE ?", "%"+topic+"%")
 	if err != nil {
 		if err == sql.ErrNoRows {
 			fmt.Println("no results")
@@ -403,7 +404,11 @@ func Postshandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method == http.MethodPost {
 		content := r.FormValue("content")
-		topic := r.FormValue("topic")
+		topics := r.Form["topic"]
+		topic := strings.Join(topics, " #")
+		if content == "" || topic == "" {
+			return
+		}
 		statement, _ := db.Prepare("INSERT INTO posts (username,content,topic,create_at) VALUES (?,?,?,?)")
 		statement.Exec(Username, content, topic, time.Now())
 		http.Redirect(w, r, "/home", http.StatusSeeOther)

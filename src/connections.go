@@ -64,7 +64,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	Username := r.FormValue("username")
 	Password := r.FormValue("password")
-
+	if Username == ""|| Password == "" {
+		errorPage(w, "All fields are required", "login.html")
+		return
+	}
 	var hashedPassword string
 	err = db.QueryRow("SELECT password FROM users WHERE username = ?", Username).Scan(&hashedPassword)
 	if err == sql.ErrNoRows {
