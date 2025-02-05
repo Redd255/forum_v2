@@ -1,3 +1,6 @@
+:root {
+  --main-color: #3498db;
+}
 /* Global styles */
 * {
   margin: 0;
@@ -78,10 +81,10 @@ nav {
 
 .Logo span {
   color: #000000;
-  background: #ff9000;
+  background: var(--main-color);
   padding: 2px 8px;
   border-radius: 4px;
-  border: 2px solid #ff9000;
+  border: 2px solid var(--main-color);
   font-size: 20px;
 }
 
@@ -108,7 +111,7 @@ nav {
 .search-box button {
   background: transparent;
   border: none;
-  color: #ff9000;
+  color: var(--main-color);
   cursor: pointer;
 }
 
@@ -147,11 +150,11 @@ header {
 }
 
 .nav-links i {
-  color: #ff9000;
+  color: var(--main-color);
 }
 
 .tweet-button {
-  background: #ff9000;
+  background: var(--main-color);
   color: white;
   border: none;
   padding: 12px 25px;
@@ -263,11 +266,11 @@ main {
 
 
 .btns i.active {
-  color: #ff9000;
+  color: var(--main-color);
 }
 
 .categorie {
-  color: #ff9000;
+  color: var(--main-color);
 }
 
 /* Modal */
@@ -314,7 +317,7 @@ main {
 }
 
 .choosed {
-  background: #ff9000;
+  background: var(--main-color);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -355,7 +358,7 @@ main {
 }
 
 .follow-cont i {
-  color: #ff9000;
+  color: var(--main-color);
 }
 
 /* Menu options */
@@ -572,11 +575,11 @@ main {
 
 .btns:hover {
     background: rgba(255, 144, 0, 0.1);
-    color: #ff9000;
+    color: var(--main-color);
 }
 
 .btns.active {
-    color: #ff9000;
+    color: var(--main-color);
 }
 
 .reaction-btn .count {
@@ -597,14 +600,14 @@ main {
 
 .comment-btn:hover {
     background: rgba(255, 144, 0, 0.1);
-    color: #ff9000;
+    color: var(--main-color);
 }
 
 
 
 .category-badge {
     background: rgba(255, 144, 0, 0.15);
-    color: #ff9000;
+    color: var(--main-color);
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 14px;
