@@ -1,6 +1,6 @@
 module zone
 
-go 1.23.5
+go 1.22.3
 
 require (
 	github.com/gofrs/uuid v4.4.0+incompatible
